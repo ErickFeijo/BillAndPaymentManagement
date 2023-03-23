@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  gestorcontas:
+    image: ${DOCKER_REGISTRY-}gestorcontas
+    build:
+      context: .
+      dockerfile: GestorContas/Dockerfile
+    depends_on: 
+      - database
+    ports:
+      - "5000:80"
+    restart: always
+    environment: 
+      - DBHOST=database
+      - DBPORT=3306
+      - MYSQL_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=gestorcontasdb
+  
+  database:
+    image: mysql:8.0.22
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+    expose: 
+      - 3306
+    volumes:
+      - db-volume:/var/lib/mysql
+    restart: always
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: gestorcontasdb
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_management
+             
+    ports: 
+    - 25672:25672 # (erlang) communication between the nodes and CLI tool
+    - 15672:15672 # communication with the web management API 
+             
+    volumes:
+    # data persistence
+    - /docker_conf/rabbitmq/data/:/var/lib/rabbitmq/
+    # data mapping -> host: container
+    # queues and messages data of the container will be stored on the host
+    environment:
+    - RABBITMQ_DEFAULT_USER = admin
+    - RABBITMQ_DEFAULT_PASS = passw123
+
+    restart: always
+
+volumes:
+  logs-folder:
+    name: ${log_rabbitmq_management}
+    driver: local
+  db-volume:
