@@ -23,7 +23,7 @@ namespace GestorContas.Service
             return _repository.List();
         }
 
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             _repository.Add(item);
             _repository.Save();

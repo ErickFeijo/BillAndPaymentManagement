@@ -8,7 +8,7 @@ namespace GestorContas.Controllers
     [Route("[controller]")]
     public class PaymentController : BaseController<Payment>
     {
-        public PaymentController(IBaseService<Payment> _baseService) : base(_baseService)
+        public PaymentController(IPaymentService paymentService) : base(paymentService)
         {
         }
     }

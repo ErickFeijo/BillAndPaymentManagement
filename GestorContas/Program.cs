@@ -2,10 +2,12 @@ global using GestorContas.Data;
 global using Microsoft.EntityFrameworkCore;
 using GestorContas.Data.Repositories;
 using GestorContas.Data.Repositories.Interfaces;
+using GestorContas.Messaging.Interfaces;
+using GestorContas.Model;
 using GestorContas.Service;
 using GestorContas.Service.Interfaces;
-using System;
-using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +17,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySQL(BuildConnectionString(builder));
+    options.UseMySQL(GetMySQLConfig(builder));
 });
 
+builder.Services.AddSingleton((Func<IServiceProvider, IMessaging>)(provider =>
+{
+    RabbitMQConfig rabbitMQConfig = GetRabbitMQConfig(builder);
+    return new RabbitMQService(rabbitMQConfig);
+}));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +32,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DbContext, DataContext>();
 builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 var app = builder.Build();
@@ -49,7 +58,7 @@ app.MapControllers();
 
 app.Run();
 
-static string BuildConnectionString(WebApplicationBuilder builder)
+static string GetMySQLConfig(WebApplicationBuilder builder)
 {
     var host = builder.Configuration["DBHOST"] ?? "localhost";
     var port = builder.Configuration["DBPORT"] ?? "3306";
@@ -59,4 +68,14 @@ static string BuildConnectionString(WebApplicationBuilder builder)
 
     string mySqlConnStr = $"server={host}; userid={userid};pwd={password};port={port};database={productsdb}";
     return mySqlConnStr;
+}
+
+static RabbitMQConfig GetRabbitMQConfig(WebApplicationBuilder builder)
+{
+    return new RabbitMQConfig()
+    {
+        HostName = builder.Configuration["RABBITMQ_Host"],
+        Password = builder.Configuration["RABBITMQ_PASSWORD"],
+        User = builder.Configuration["RABBITMQ_USER"]
+    };
 }

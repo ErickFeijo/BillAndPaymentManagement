@@ -4,7 +4,7 @@ using System.Data;
 
 namespace GestorContas.Service.Interfaces
 {
-    internal interface IPaymentService : IBaseService<Payment>
+    public interface IPaymentService : IBaseService<Payment>
     {
     }
 }
