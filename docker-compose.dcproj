@@ -3,10 +3,10 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>949be99a-7a66-48e0-9eda-c9ebb1fc857f</ProjectGuid>
+    <ProjectGuid>5e7488db-b6cc-4cb1-aa55-d2888f6e6811</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>gestorcontas</DockerServiceName>
+    <DockerServiceName>registerserviceapi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

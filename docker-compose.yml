@@ -1,11 +1,11 @@
 version: '3.4'
 
 services:
-  gestorcontas:
-    image: ${DOCKER_REGISTRY-}gestorcontas
+  registerserviceapi:
+    image: ${DOCKER_REGISTRY-}registerserviceapi
     build:
       context: .
-      dockerfile: GestorContas/Dockerfile
+      dockerfile: RegisterServiceAPI/Dockerfile
     depends_on: 
       - database
       - rabbitmq
@@ -17,7 +17,7 @@ services:
       - DBPORT=3306
       - MYSQL_PASSWORD=root
       - MYSQL_USER=root
-      - MYSQL_DATABASE=gestorcontasdb
+      - MYSQL_DATABASE=registerServiceAPIdb
       - RABBITMQ_Host=rabbitmq
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
@@ -36,7 +36,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: root
       MYSQL_PASSWORD: root
-      MYSQL_DATABASE: gestorcontasdb
+      MYSQL_DATABASE: registerServiceAPIdb
 
   rabbitmq:
     image: rabbitmq:3-management
