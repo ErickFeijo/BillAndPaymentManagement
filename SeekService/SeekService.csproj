@@ -8,4 +8,13 @@
     <DockerfileContext>..\RegisterServiceAPI</DockerfileContext>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Payment\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.60.0.2958" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
+  </ItemGroup>
+
 </Project>
